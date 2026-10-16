@@ -1,0 +1,42 @@
+
+<main class="desafio">
+  <a routerLink="/jogos" class="voltar">← Voltar aos desafios</a>
+
+  <div class="cabecalho">
+    <span class="categoria">DESAFIO 01</span>
+  </div>
+
+  <h1>Quiz <span>tradicional</span></h1>
+  <p>Leia a frase e escolha a alternativa correta.</p>
+
+  <section class="pergunta">
+    <span>QUESTÃO 01</span>
+    <h2>Na frase "O aluno estudou bastante", qual é o sujeito?</h2>
+    <p class="frase">O aluno estudou bastante.</p>
+
+    <div class="alternativas">
+      @for (alternativa of alternativas; track alternativa; let i = $index) {
+        <button
+          class="alternativa"
+          [class.correta]="selecionada !== null && i === 0"
+          [class.errada]="selecionada === i && i !== 0"
+          [disabled]="selecionada !== null"
+          (click)="responder(i)">
+          <span>{{ 'ABCD'[i] }}</span>
+          {{ alternativa }}
+        </button>
+      }
+    </div>
+
+    @if (selecionada !== null) {
+      <div class="feedback">
+        <h3>{{ selecionada === 0 ? 'Resposta correta!' : 'Não foi dessa vez!' }}</h3>
+        <p>
+          "O aluno" é o sujeito, pois é quem pratica a ação de estudar.
+          "Estudou bastante" é o predicado.
+        </p>
+        <button (click)="proxima()">Tentar novamente</button>
+      </div>
+    }
+  </section>
+</main>

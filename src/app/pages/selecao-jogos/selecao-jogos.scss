@@ -1,0 +1,95 @@
+
+.selecao {
+  max-width: 1100px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 48px 32px;
+  color: #f4f4f5;
+}
+
+.selecao > a {
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+.selecao > a:hover {
+  text-decoration: underline;
+}
+
+.selecao h1 {
+  margin-top: 40px;
+  margin-bottom: 12px;
+  font-size: clamp(32px, 5vw, 48px);
+}
+
+.selecao h1 span {
+  color: #38bdf8;
+}
+
+.selecao > p {
+  margin-bottom: 32px;
+  color: #b4b4be;
+  line-height: 1.6;
+}
+
+.grade-jogos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.jogo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 240px;
+  padding: 28px;
+  border: 1px solid #34343b;
+  border-radius: 18px;
+  background: #17171b;
+  color: #f4f4f5;
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.jogo-card:hover {
+  border-color: #38bdf8;
+  transform: translateY(-4px);
+}
+
+.numero {
+  color: #38bdf8;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.jogo-card h2 {
+  margin: 24px 0 10px;
+  font-size: 23px;
+}
+
+.jogo-card p {
+  color: #b4b4be;
+  line-height: 1.6;
+}
+
+.abrir {
+  margin-top: auto;
+  padding-top: 20px;
+  color: #38bdf8;
+  font-weight: bold;
+}
+
+@media (max-width: 650px) {
+  .selecao {
+    padding: 32px 20px;
+  }
+
+  .grade-jogos {
+    grid-template-columns: 1fr;
+  }
+
+  .jogo-card {
+    min-height: 200px;
+  }
+}

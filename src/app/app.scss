@@ -1,0 +1,291 @@
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.pagina {
+  min-height: 100vh;
+  padding: 0 8%;
+  color: #f4f3ff;
+  background:
+    radial-gradient(ellipse at 50% 30%, #22204b 0%, transparent 55%),
+    #0b0b16;
+  font-family: Inter, "Segoe UI", sans-serif;
+}
+
+.cabecalho {
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ffffff12;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.logo-icone {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: #8b5cf6;
+  color: #fff;
+}
+
+.destaque {
+  color: #a78bfa;
+}
+
+nav {
+  display: flex;
+  gap: 30px;
+}
+
+nav a,
+.cartao a {
+  color: #c4b5fd;
+  text-decoration: none;
+}
+
+nav a {
+  font-size: 14px;
+}
+
+nav a:hover,
+.cartao a:hover {
+  color: #fff;
+}
+
+.principal {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 100px 0 70px;
+  text-align: center;
+}
+
+.etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 15px;
+  border: 1px solid #8b5cf644;
+  border-radius: 30px;
+  color: #c4b5fd;
+  background: #8b5cf612;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+.ponto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #a78bfa;
+}
+
+h1 {
+  margin: 30px 0 20px;
+  font-size: clamp(38px, 6vw, 65px);
+  line-height: 1.12;
+  letter-spacing: -2px;
+}
+
+h1 span {
+  color: #a78bfa;
+}
+
+.descricao {
+  max-width: 570px;
+  margin: 0 auto;
+  color: #aaa9c1;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.botao-jogar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 32px;
+  padding: 17px 28px;
+  border: 0;
+  border-radius: 12px;
+  color: white;
+  background: #7c3aed;
+  box-shadow: 0 8px 35px #7c3aed44;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.botao-jogar:hover {
+  background: #8b5cf6;
+  transform: translateY(-2px);
+}
+
+.informacoes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 35px;
+  margin-top: 65px;
+}
+
+.informacao {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.numero {
+  color: #e9d5ff;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.legenda {
+  color: #9291aa;
+  font-size: 12px;
+}
+
+.separador {
+  width: 1px;
+  height: 35px;
+  background: #ffffff20;
+}
+
+.recursos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto 75px;
+}
+
+.cartao {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 26px;
+  border: 1px solid #ffffff12;
+  border-radius: 18px;
+  background: #ffffff06;
+  transition: 0.2s;
+}
+
+.cartao:hover {
+  border-color: #8b5cf655;
+  background: #ffffff0a;
+}
+
+.icone {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  font-size: 25px;
+}
+
+.icone-livro {
+  color: #c4b5fd;
+  background: #8b5cf622;
+}
+
+.icone-equipe {
+  color: #67e8f9;
+  background: #06b6d422;
+}
+
+.cartao h2 {
+  margin: 3px 0 9px;
+  font-size: 16px;
+}
+
+.cartao p {
+  margin: 0 0 15px;
+  color: #aaa9c1;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.cartao a {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 25px 0;
+  border-top: 1px solid #ffffff12;
+  color: #77768e;
+  font-size: 11px;
+}
+
+@media (max-width: 650px) {
+  .pagina {
+    padding: 0 6%;
+  }
+
+  .cabecalho {
+    height: 75px;
+  }
+
+  nav {
+    gap: 15px;
+  }
+
+  nav a {
+    font-size: 12px;
+  }
+
+  .principal {
+    padding: 75px 0 55px;
+  }
+
+  h1 {
+    letter-spacing: -1px;
+  }
+
+  .informacoes {
+    gap: 15px;
+  }
+
+  .legenda {
+    max-width: 90px;
+    line-height: 1.5;
+  }
+
+  .recursos {
+    grid-template-columns: 1fr;
+  }
+
+  .cartao {
+    padding: 20px;
+  }
+
+  footer {
+    flex-direction: column;
+    text-align: center;
+  }
+}

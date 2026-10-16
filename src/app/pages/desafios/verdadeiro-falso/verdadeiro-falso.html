@@ -1,0 +1,44 @@
+
+<main class="desafio">
+  <a routerLink="/jogos" class="voltar">← Voltar aos desafios</a>
+
+  <div class="cabecalho">
+    <span>DESAFIO 03</span>
+  </div>
+
+  <h1>Verdadeiro <span>ou falso?</span></h1>
+  <p>Leia atentamente o enunciado e responda se a afirmação é verdadeira ou falsa.</p>
+
+  <section class="pergunta">
+    <span>QUESTÃO 01</span>
+    <h2>O sujeito é sempre a primeira palavra de uma oração.</h2>
+
+    <div class="opcoes">
+      <button
+        class="alternativa"
+        [disabled]="resposta !== null"
+        (click)="responder(true)">
+        Verdadeiro
+      </button>
+
+      <button
+        class="alternativa"
+        [disabled]="resposta !== null"
+        (click)="responder(false)">
+        Falso
+      </button>
+    </div>
+
+    @if (resposta !== null) {
+      <div class="feedback">
+        <h3>{{ resposta === false ? 'Resposta correta!' : 'Resposta incorreta!' }}</h3>
+        <p>
+          A afirmação é falsa. O sujeito não precisa aparecer no início
+          da oração. Em "Chegaram os visitantes", por exemplo, o sujeito
+          é "os visitantes".
+        </p>
+        <button (click)="reiniciar()">Tentar novamente</button>
+      </div>
+    }
+  </section>
+</main>
