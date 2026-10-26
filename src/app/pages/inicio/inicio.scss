@@ -2,8 +2,8 @@
 .inicio {
   min-height: 100vh;
   padding: 0 7%;
-  color: #f4f4f5;
-  background: #0c0c0e;
+  color: #E5EDE8;
+  background: #101A18;
 }
 
 /* APRESENTAÇÃO E BOTÃO JOGAR */
@@ -18,8 +18,9 @@
   text-align: center;
 }
 
+
 .etiqueta {
-  color: #38bdf8;
+  color: #07d66f;
   font-size: 12px;
   font-weight: bold;
   letter-spacing: 3px;
@@ -33,7 +34,7 @@
 }
 
 .apresentacao h1 span {
-  color: #38bdf8;
+  color: #07d66f  ;
 }
 
 .descricao {
@@ -52,7 +53,7 @@
   max-width: 100%;
   margin-top: 36px;
   padding: 22px 32px;
-  background: #0284c7;
+  background: #245C45;
   color: #ffffff;
   border: none;
   border-radius: 12px;
@@ -62,8 +63,14 @@
   transition: background 0.2s, transform 0.2s;
 }
 
+#barradecima{
+  border: none;
+  height: 1px;
+  background-color: #27272a;
+}
+
 .botao-jogar:hover {
-  background: #0369a1;
+  background: #0f5739;
   transform: translateY(-3px);
 }
 
@@ -74,8 +81,7 @@
 /* MATERIAL DE APOIO */
 
 .materiais {
-  padding: 60px 0 75px;
-  border-top: 1px solid #27272a;
+  padding: 20px 0 75px;
 }
 
 .materiais h2,
@@ -98,7 +104,7 @@
   padding: 15px 20px;
   border: 1px solid #34343b;
   border-radius: 10px;
-  color: #38bdf8;
+  color: #63C795;
   text-decoration: none;
   font-weight: bold;
   transition: background 0.2s, border-color 0.2s;
@@ -106,7 +112,7 @@
 
 .link-material:hover {
   background: #17171b;
-  border-color: #38bdf8;
+  border-color: #63C795;
 }
 
 /* CRÉDITOS */
