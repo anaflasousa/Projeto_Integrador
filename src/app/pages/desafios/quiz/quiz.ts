@@ -22,6 +22,7 @@ export class Quiz implements OnInit {
   pergunta: Pergunta | null = null;
   selecionada: number | null = null;
   resultado: ResultadoResposta | null = null;
+  indiceAtual = 0;
   carregando = true;
   erro = '';
 
@@ -35,30 +36,34 @@ export class Quiz implements OnInit {
   }
 
   carregarPergunta() {
-    this.carregando = true;
-    this.erro = '';
+  this.carregando = true;
+  this.erro = '';
 
-    this.quizService.buscarPerguntas('quiz').subscribe({
-      next: (perguntas: Pergunta[]) => {
-        this.pergunta = perguntas[0] ?? null;
-        this.carregando = false;
 
-        if (!this.pergunta) {
-          this.erro = 'Nenhuma pergunta encontrada.';
-        }
+  this.quizService.buscarPerguntas('quiz').subscribe({
+    next: (perguntas: Pergunta[]) => {
 
-        this.cdr.detectChanges();
-      },
-      error: (erro) => {
-        console.error('Erro ao carregar perguntas:', erro);
+      this.pergunta = perguntas[this.indiceAtual] ?? null;
 
-        this.erro = 'Não foi possível carregar a pergunta.';
-        this.carregando = false;
+      this.carregando = false;
 
-        this.cdr.detectChanges();
+      if (!this.pergunta) {
+        this.erro = 'Não há mais perguntas disponíveis.';
       }
-    });
-  }
+
+      this.cdr.detectChanges();
+    },
+
+    error: (erro) => {
+      console.error('Erro ao carregar perguntas:', erro);
+
+      this.erro = 'Não foi possível carregar as perguntas.';
+      this.carregando = false;
+
+      this.cdr.detectChanges();
+    }
+  });
+}
 
   responder(indice: number) {
     if (this.selecionada !== null || !this.pergunta) return;
@@ -84,8 +89,11 @@ export class Quiz implements OnInit {
   }
 
   proxima() {
-    this.selecionada = null;
-    this.resultado = null;
-    this.carregarPergunta();
-  }
+  this.indiceAtual++;
+
+  this.selecionada = null;
+  this.resultado = null;
+
+  this.carregarPergunta();
+}
 }

@@ -19,7 +19,7 @@
 
   @if (!carregando && pergunta) {
     <section class="pergunta">
-      <span>QUESTÃO 01</span>
+      <span>QUESTÕES</span>
       <h2>{{ pergunta.enunciado }}</h2>
 
       <div class="alternativas">
@@ -44,7 +44,7 @@
 
           <p>{{ resultado.explicacao }}</p>
 
-          <button (click)="proxima()">Tentar novamente</button>
+          <button (click)="proxima()">Próxima questão</button>
         </div>
       }
     </section>
