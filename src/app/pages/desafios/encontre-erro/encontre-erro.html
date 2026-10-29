@@ -9,33 +9,53 @@
   <h1>Encontre o <span>erro</span></h1>
   <p>Uma das análises abaixo está incorreta. Identifique-a.</p>
 
-  <section class="pergunta">
-    <span>QUESTÃO 01</span>
-    <h2>Frase: "A menina comprou um caderno."</h2>
+  @if (carregando) {
+    <section class="pergunta">
+      <p>Carregando perguntas...</p>
+    </section>
+  } @else if (erro && !pergunta) {
+    <section class="pergunta">
+      <p class="feedback">{{ erro }}</p>
+      <button (click)="carregarPergunta()">Tentar novamente</button>
+    </section>
+  } @else if (pergunta) {
+    <section class="pergunta">
+      <span>QUESTÃO 01</span>
+      <h2>{{ pergunta.enunciado }}</h2>
 
-    <div class="alternativas">
-      @for (opcao of opcoes; track opcao.texto; let i = $index) {
-        <button
-          class="alternativa"
-          [disabled]="selecionada !== null"
-          [class.correta]="selecionada !== null && opcao.correta"
-          [class.errada]="selecionada === i && !opcao.correta"
-          (click)="responder(i)">
-          {{ opcao.texto }}
-        </button>
-      }
-    </div>
-
-    @if (selecionada !== null) {
-      <div class="feedback">
-        <h3>{{ opcoes[selecionada].correta ? 'Você encontrou o erro!' : 'Essa análise está correta.' }}</h3>
-        <p>
-          "Um caderno" é objeto direto, pois completa o sentido do verbo
-          "comprou". O sujeito é "A menina", e o predicado é
-          "comprou um caderno".
-        </p>
-        <button (click)="reiniciar()">Tentar novamente</button>
+      <div class="alternativas">
+        @for (opcao of pergunta.opcoes ?? []; track opcao; let i = $index) {
+          <button
+            class="alternativa"
+            [disabled]="selecionada !== null"
+            [class.correta]="resultado && resultado.correta && selecionada === i"
+            [class.errada]="resultado && !resultado.correta && selecionada === i"
+            (click)="responder(i)"
+          >
+            {{ opcao }}
+          </button>
+        }
       </div>
-    }
-  </section>
+
+      @if (erro && pergunta) {
+        <div class="feedback">
+          <p>{{ erro }}</p>
+        </div>
+      }
+
+      @if (resultado) {
+        <div class="feedback">
+          <h3>
+            {{ resultado.correta
+              ? 'Você encontrou o erro!'
+              : 'Essa não é a análise incorreta.' }}
+          </h3>
+
+          <p>{{ resultado.explicacao }}</p>
+
+          <button (click)="reiniciar()">Tentar novamente</button>
+        </div>
+      }
+    </section>
+  }
 </main>

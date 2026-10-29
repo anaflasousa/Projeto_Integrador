@@ -1,6 +1,11 @@
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import {
+  QuizService,
+  Pergunta,
+  ResultadoResposta
+} from '../../../services/quiz';
 
 @Component({
   selector: 'app-ligar-colunas',
@@ -9,30 +14,65 @@ import { RouterLink } from '@angular/router';
   templateUrl: './ligar-colunas.html',
   styleUrl: './ligar-colunas.scss',
 })
-export class LigarColunas {
+export class LigarColunas implements OnInit {
+  pergunta: Pergunta | null = null;
+
   selecionado: number | null = null;
   respostas: Record<number, number> = {};
+
+  resultado: ResultadoResposta | null = null;
   feedback = '';
 
-  termos = [
-    { texto: 'O menino', correta: 0 },
-    { texto: 'Comprou um livro', correta: 1 },
-    { texto: 'Ontem', correta: 2 },
-  ];
+  carregando = true;
+  enviando = false;
+  erro = '';
 
-  classificacoes = [
-    'Sujeito',
-    'Predicado',
-    'Adjunto adverbial de tempo',
-  ];
+  classificacoes: string[] = [];
 
-  escolherTermo(indice: number) {
+  constructor(private quizService: QuizService) {}
+
+  ngOnInit(): void {
+    this.carregarPergunta();
+  }
+
+  carregarPergunta(): void {
+    this.carregando = true;
+    this.erro = '';
+
+    this.quizService.buscarPerguntas('ligar-colunas').subscribe({
+      next: (perguntas: Pergunta[]) => {
+        this.pergunta = perguntas[0] ?? null;
+        this.carregando = false;
+
+        if (!this.pergunta) {
+          this.erro = 'Nenhuma pergunta encontrada.';
+          return;
+        }
+
+        this.classificacoes = this.pergunta.opcoes ?? [];
+      },
+      error: () => {
+        this.carregando = false;
+        this.erro = 'Não foi possível carregar a pergunta.';
+      }
+    });
+  }
+
+  escolherTermo(indice: number): void {
+    if (this.enviando || this.resultado?.correta) return;
+
     this.selecionado = indice;
     this.feedback = '';
   }
 
-  escolherClassificacao(indice: number) {
-    if (this.selecionado === null) return;
+  escolherClassificacao(indice: number): void {
+    if (
+      this.selecionado === null ||
+      this.enviando ||
+      this.resultado?.correta
+    ) {
+      return;
+    }
 
     this.respostas = {
       ...this.respostas,
@@ -40,24 +80,49 @@ export class LigarColunas {
     };
 
     this.selecionado = null;
+    this.feedback = '';
 
-    const corretas = Object.keys(this.respostas).filter(
-      chave => this.respostas[Number(chave)] ===
-        this.termos[Number(chave)].correta
-    ).length;
+    const totalTermos = this.pergunta?.itens?.length ?? 0;
 
-    this.feedback = `${corretas} de ${this.termos.length} associações corretas.`;
+    if (Object.keys(this.respostas).length === totalTermos) {
+      this.verificarRespostas();
+    }
   }
 
-  get concluiu() {
-    return this.termos.every(
-      (_, i) => this.respostas[i] === this.termos[i].correta
-    );
+  verificarRespostas(): void {
+    if (!this.pergunta) return;
+
+    this.enviando = true;
+    this.erro = '';
+
+    this.quizService
+      .verificarAssociacoes(this.pergunta.id, this.respostas)
+      .subscribe({
+        next: (resultado: ResultadoResposta) => {
+          this.resultado = resultado;
+          this.enviando = false;
+          this.feedback = resultado.explicacao;
+        },
+        error: () => {
+          this.enviando = false;
+          this.erro = 'Não foi possível verificar as associações.';
+        }
+      });
   }
 
-  reiniciar() {
+  get concluiu(): boolean {
+    return this.resultado?.correta === true;
+  }
+
+  get termos() {
+    return this.pergunta?.itens ?? [];
+  }
+
+  reiniciar(): void {
     this.selecionado = null;
     this.respostas = {};
+    this.resultado = null;
     this.feedback = '';
+    this.erro = '';
   }
 }

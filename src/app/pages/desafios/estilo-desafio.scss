@@ -1,16 +1,19 @@
-
 .desafio {
   max-width: 900px;
   min-height: 100vh;
   margin: auto;
   padding: 40px 24px;
-  color: #f4f4f5;
+  color: #E5EDE8;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .voltar {
-  color: #38bdf8;
+  color: #63C795;
   text-decoration: none;
+}
+
+.voltar:hover {
+  color: #07d66f;
 }
 
 .cabecalho {
@@ -19,7 +22,7 @@
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 40px;
-  color: #38bdf8;
+  color: #63C795;
   font-size: 13px;
 }
 
@@ -28,7 +31,7 @@ h1 {
 }
 
 h1 span {
-  color: #38bdf8;
+  color: #07d66f;
 }
 
 .desafio > p,
@@ -42,11 +45,11 @@ h1 span {
   padding: 28px;
   border: 1px solid #34343b;
   border-radius: 18px;
-  background: #17171b;
+  background: #171f1c;
 }
 
 .pergunta > span {
-  color: #38bdf8;
+  color: #63C795;
   font-size: 12px;
   font-weight: bold;
 }
@@ -58,7 +61,7 @@ h1 span {
 .frase {
   padding: 16px;
   border-radius: 10px;
-  background: #222229;
+  background: #222c27;
 }
 
 .alternativas,
@@ -71,23 +74,24 @@ h1 span {
 .alternativa,
 .opcao {
   padding: 16px;
-  border: 1px solid #3a3a45;
+  border: 1px solid #3a4840;
   border-radius: 10px;
-  background: #202027;
-  color: #f4f4f5;
+  background: #202923;
+  color: #E5EDE8;
   text-align: left;
   cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
 }
 
 .alternativa span {
   margin-right: 12px;
-  color: #38bdf8;
+  color: #63C795;
   font-weight: bold;
 }
 
 .alternativa:hover:not(:disabled),
 .opcao:hover:not(:disabled) {
-  border-color: #38bdf8;
+  border-color: #63C795;
 }
 
 .alternativa:disabled {
@@ -95,7 +99,7 @@ h1 span {
 }
 
 .alternativa.correta {
-  border-color: #22c55e;
+  border-color: #07d66f;
   background: #123523;
 }
 
@@ -108,7 +112,7 @@ h1 span {
   margin-top: 22px;
   padding: 18px;
   border-radius: 12px;
-  background: #222229;
+  background: #222c27;
   line-height: 1.6;
 }
 
@@ -117,14 +121,21 @@ h1 span {
   padding: 12px 18px;
   border: 0;
   border-radius: 9px;
-  background: #0284c7;
-  color: white;
+  background: #245C45;
+  color: #ffffff;
   font-weight: bold;
   cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.feedback button:hover,
+.botao-principal:hover {
+  background: #0f5739;
+  transform: translateY(-2px);
 }
 
 .feedback p {
-  color: #d4d4d8;
+  color: #d0d8d3;
 }
 
 .duas-colunas {

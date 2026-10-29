@@ -9,36 +9,50 @@
   <h1>Verdadeiro <span>ou falso?</span></h1>
   <p>Leia atentamente o enunciado e responda se a afirmação é verdadeira ou falsa.</p>
 
-  <section class="pergunta">
-    <span>QUESTÃO 01</span>
-    <h2>O sujeito é sempre a primeira palavra de uma oração.</h2>
+  @if (carregando) {
+    <p>Carregando pergunta...</p>
+  }
 
-    <div class="opcoes">
-      <button
-        class="alternativa"
-        [disabled]="resposta !== null"
-        (click)="responder(true)">
-        Verdadeiro
-      </button>
+  @if (erro) {
+    <p class="feedback">{{ erro }}</p>
+  }
 
-      <button
-        class="alternativa"
-        [disabled]="resposta !== null"
-        (click)="responder(false)">
-        Falso
-      </button>
-    </div>
+  @if (!carregando && pergunta) {
+    <section class="pergunta">
+      <span>QUESTÃO 01</span>
+      <h2>{{ pergunta.enunciado }}</h2>
 
-    @if (resposta !== null) {
-      <div class="feedback">
-        <h3>{{ resposta === false ? 'Resposta correta!' : 'Resposta incorreta!' }}</h3>
-        <p>
-          A afirmação é falsa. O sujeito não precisa aparecer no início
-          da oração. Em "Chegaram os visitantes", por exemplo, o sujeito
-          é "os visitantes".
-        </p>
-        <button (click)="reiniciar()">Tentar novamente</button>
+      <div class="opcoes">
+        <button
+          class="alternativa"
+          [class.correta]="resultado && resultado.correta && resposta === true"
+          [class.errada]="resultado && !resultado.correta && resposta === true"
+          [disabled]="resposta !== null"
+          (click)="responder(true)">
+          Verdadeiro
+        </button>
+
+        <button
+          class="alternativa"
+          [class.correta]="resultado && resultado.correta && resposta === false"
+          [class.errada]="resultado && !resultado.correta && resposta === false"
+          [disabled]="resposta !== null"
+          (click)="responder(false)">
+          Falso
+        </button>
       </div>
-    }
-  </section>
+
+      @if (resultado) {
+        <div class="feedback">
+          <h3>
+            {{ resultado.correta ? 'Resposta correta!' : 'Resposta incorreta!' }}
+          </h3>
+
+          <p>{{ resultado.explicacao }}</p>
+
+          <button (click)="reiniciar()">Tentar novamente</button>
+        </div>
+      }
+    </section>
+  }
 </main>
