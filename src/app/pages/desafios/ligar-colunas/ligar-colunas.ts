@@ -1,5 +1,9 @@
 
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   QuizService,
@@ -29,34 +33,42 @@ export class LigarColunas implements OnInit {
 
   classificacoes: string[] = [];
 
-  constructor(private quizService: QuizService) {}
+  constructor(
+    private quizService: QuizService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.carregarPergunta();
   }
 
-  carregarPergunta(): void {
-    this.carregando = true;
-    this.erro = '';
+carregarPergunta(): void {
+  this.carregando = true;
+  this.erro = '';
 
-    this.quizService.buscarPerguntas('ligar-colunas').subscribe({
-      next: (perguntas: Pergunta[]) => {
-        this.pergunta = perguntas[0] ?? null;
-        this.carregando = false;
+  this.quizService.buscarPerguntas('ligar-colunas').subscribe({
+    next: (perguntas: Pergunta[]) => {
+      this.pergunta = perguntas[0] ?? null;
+      this.carregando = false;
 
-        if (!this.pergunta) {
-          this.erro = 'Nenhuma pergunta encontrada.';
-          return;
-        }
-
+      if (!this.pergunta) {
+        this.erro = 'Nenhuma pergunta encontrada.';
+      } else {
         this.classificacoes = this.pergunta.opcoes ?? [];
-      },
-      error: () => {
-        this.carregando = false;
-        this.erro = 'Não foi possível carregar a pergunta.';
       }
-    });
-  }
+
+      this.cdr.detectChanges();
+    },
+    error: (erro) => {
+      console.error('Erro ao carregar perguntas:', erro);
+
+      this.carregando = false;
+      this.erro = 'Não foi possível carregar a pergunta.';
+
+      this.cdr.detectChanges();
+    }
+  });
+}
 
   escolherTermo(indice: number): void {
     if (this.enviando || this.resultado?.correta) return;
@@ -102,10 +114,13 @@ export class LigarColunas implements OnInit {
           this.resultado = resultado;
           this.enviando = false;
           this.feedback = resultado.explicacao;
+          this.cdr.detectChanges();
         },
-        error: () => {
+        error: (erro) => {
+          console.error('Erro ao verificar associações:', erro);
           this.enviando = false;
           this.erro = 'Não foi possível verificar as associações.';
+          this.cdr.detectChanges();
         }
       });
   }

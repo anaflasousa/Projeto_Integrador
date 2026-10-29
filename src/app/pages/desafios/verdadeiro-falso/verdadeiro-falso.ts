@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   QuizService,
@@ -21,7 +21,10 @@ export class VerdadeiroFalso implements OnInit {
   carregando = true;
   erro = '';
 
-  constructor(private quizService: QuizService) {}
+  constructor(
+    private quizService: QuizService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
     this.carregarPergunta();
@@ -39,10 +42,14 @@ export class VerdadeiroFalso implements OnInit {
         if (!this.pergunta) {
           this.erro = 'Nenhuma pergunta encontrada.';
         }
+
+        this.cdr.detectChanges();
       },
       error: () => {
         this.erro = 'Não foi possível carregar a pergunta.';
         this.carregando = false;
+
+        this.cdr.detectChanges();
       }
     });
   }
@@ -63,10 +70,13 @@ export class VerdadeiroFalso implements OnInit {
     ).subscribe({
       next: (resultado: ResultadoResposta) => {
         this.resultado = resultado;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.erro = 'Não foi possível verificar sua resposta.';
         this.resposta = null;
+
+        this.cdr.detectChanges();
       }
     });
   }
