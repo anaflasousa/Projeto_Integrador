@@ -6,6 +6,16 @@ import {
   Pergunta,
   ResultadoResposta
 } from '../../../services/quiz';
+import { ElementRef, ViewChild, HostListener } from '@angular/core';
+
+interface Conexao {
+  origemIndex: number;
+  destinoIndex: number;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
 
 @Component({
   selector: 'app-ligar-colunas',
@@ -14,7 +24,13 @@ import {
   templateUrl: './ligar-colunas.html',
   styleUrl: './ligar-colunas.scss',
 })
+
+
 export class LigarColunas implements OnInit {
+
+  @ViewChild('containerColunas') containerColunas!: ElementRef<HTMLDivElement>;
+  linhas: Conexao[] = [];
+
   perguntas: Pergunta[] = [];
   pergunta: Pergunta | null = null;
 
@@ -34,10 +50,15 @@ export class LigarColunas implements OnInit {
   constructor(
     private quizService: QuizService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.carregarPergunta();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.recalcularLinhas();
   }
 
   carregarPergunta(): void {
@@ -72,6 +93,7 @@ export class LigarColunas implements OnInit {
 
     this.selecionado = null;
     this.respostas = {};
+    this.linhas = [];
     this.resultado = null;
     this.feedback = '';
     this.erro = '';
@@ -99,12 +121,22 @@ export class LigarColunas implements OnInit {
       return;
     }
 
+    const termoIndex = this.selecionado;
+    const classIndex = indice;
+
     this.respostas = {
       ...this.respostas,
-      [this.selecionado]: indice
+      [this.selecionado]: classIndex
     };
 
     this.selecionado = null;
+
+    setTimeout(() => {
+      if (termoIndex !== null) {
+        this.adiconarLinha(termoIndex, classIndex);
+      }
+    }, 50);
+
 
     const totalTermos = this.pergunta?.itens?.length ?? 0;
 
@@ -154,5 +186,42 @@ export class LigarColunas implements OnInit {
 
   get termos() {
     return this.pergunta?.itens ?? [];
+  }
+
+  adiconarLinha(termoIndex: number, classIndex: number): void {
+    if (!this.containerColunas) return;
+
+    const containerRect = this.containerColunas.nativeElement.getBoundingClientRect();
+    const btnTermo = this.containerColunas.nativeElement.querySelector(`#termo-${termoIndex}`);
+    const btnClass = this.containerColunas.nativeElement.querySelector(`#class-${classIndex}`);
+
+    if (btnTermo && btnClass) {
+      const rectA = btnTermo.getBoundingClientRect();
+      const rectB = btnClass.getBoundingClientRect();
+
+      // Ponto inicial (borda direita do botão da esquerda)
+      const x1 = rectA.right - containerRect.left;
+      const y1 = rectA.top + rectA.height / 2 - containerRect.top;
+
+      // Ponto final (borda esquerda do botão da direita)
+      const x2 = rectB.left - containerRect.left;
+      const y2 = rectB.top + rectB.height / 2 - containerRect.top;
+
+      this.linhas.push({
+        origemIndex: termoIndex,
+        destinoIndex: classIndex,
+        x1, y1, x2, y2
+      });
+
+      this.cdr.detectChanges();
+    }
+  }
+
+  recalcularLinhas(): void {
+    const conexoesAntigas = [...this.linhas];
+    this.linhas = [];
+    conexoesAntigas.forEach(c => {
+      this.adiconarLinha(c.origemIndex, c.destinoIndex);
+    });
   }
 }

@@ -1,4 +1,3 @@
-
 <main class="desafio">
   <a routerLink="/jogos" class="voltar">← Voltar aos desafios</a>
 
@@ -10,98 +9,98 @@
   <p>Selecione um termo à esquerda e depois sua classificação à direita.</p>
 
   @if (carregando) {
-    <section class="pergunta">
-      <p>Carregando perguntas...</p>
-    </section>
+  <section class="pergunta">
+    <p>Carregando perguntas...</p>
+  </section>
   } @else if (erro && !pergunta) {
-    <section class="pergunta">
-      <p class="feedback">{{ erro }}</p>
-      <button class="botao-principal" (click)="carregarPergunta()">
-        Tentar novamente
-      </button>
-    </section>
+  <section class="pergunta">
+    <p class="feedback">{{ erro }}</p>
+    <button class="botao-principal" (click)="carregarPergunta()">
+      Tentar novamente
+    </button>
+  </section>
   } @else if (concluiu) {
-    <section class="pergunta">
-      <h2>Desafio concluído!</h2>
-      <p>Você chegou ao final de todas as perguntas.</p>
+  <section class="pergunta">
+    <h2>Desafio concluído!</h2>
+    <p>Você chegou ao final de todas as perguntas.</p>
 
-      <button class="botao-principal" (click)="reiniciar()">
-        Recomeçar desafio
-      </button>
-    </section>
+    <button class="botao-principal" (click)="reiniciar()">
+      Recomeçar desafio
+    </button>
+  </section>
   } @else if (pergunta) {
-    <section class="pergunta">
-      <span>QUESTÃO {{ indiceAtual + 1 }} DE {{ perguntas.length }}</span>
+  <section class="pergunta">
+    <span>QUESTÃO {{ indiceAtual + 1 }} DE {{ perguntas.length }}</span>
 
-      <h2>{{ pergunta.enunciado }}</h2>
+    <h2>{{ pergunta.enunciado }}</h2>
 
-      <div class="duas-colunas">
-        <div>
-          <h3>Termos</h3>
+    <div class="duas-colunas" #containerColunas>
+      <svg class="camada-linhas">
+        @for (linha of linhas; track $index){
+        <line [attr.x1]="linha.x1" [attr.y1]="linha.y1" [attr.x2]="linha.x2" [attr.y2]="linha.y2"
+          [class.correta]="resultado?.resultados?.[linha.origemIndex.toString()] === true"
+          [class.errada]="resultado?.resultados?.[linha.origemIndex.toString()] === false" />
+        }
+      </svg>
+      <div>
+        <h3>Termos</h3>
 
-          @for (termo of termos; track $index; let i = $index) {
-            <button
-              class="opcao"
-              [disabled]="respostas[i] !== undefined || enviando || resultado !== null"
-              [class.selecionada]="selecionado === i"
-              [class.correta]="resultado?.resultados?.[i.toString()] === true"
-              [class.errada]="resultado?.resultados?.[i.toString()] === false"
-              (click)="escolherTermo(i)"
-            >
-              {{ termo.texto }}
+        @for (termo of termos; track $index; let i = $index) {
+        <button [id]="'termo-' + i" class="opcao"
+          [disabled]="respostas[i] !== undefined || enviando || resultado !== null"
+          [class.selecionada]="selecionado === i" [class.correta]="resultado?.resultados?.[i.toString()] === true"
+          [class.errada]="resultado?.resultados?.[i.toString()] === false" (click)="escolherTermo(i)">
+          {{ termo.texto }}
 
-              @if (resultado?.resultados?.[i.toString()] === true) {
-                ✓
-              } @else if (resultado?.resultados?.[i.toString()] === false) {
-                ✗
-              }
-            </button>
+          @if (resultado?.resultados?.[i.toString()] === true) {
+          ✓
+          } @else if (resultado?.resultados?.[i.toString()] === false) {
+          ✗
           }
-        </div>
-
-        <div>
-          <h3>Classificações</h3>
-
-          @for (classificacao of classificacoes; track $index; let i = $index) {
-            <button
-              class="opcao"
-              [disabled]="selecionado === null || enviando || resultado !== null"
-              (click)="escolherClassificacao(i)"
-            >
-              {{ classificacao }}
-            </button>
-          }
-        </div>
+        </button>
+        }
       </div>
 
-      @if (enviando) {
-        <div class="feedback">
-          <p>Verificando suas associações...</p>
-        </div>
-      }
+      <div>
+        <h3>Classificações</h3>
 
-      @if (erro && pergunta) {
-        <div class="feedback">
-          <p>{{ erro }}</p>
-          <button class="botao-principal" (click)="verificarRespostas()">
-            Tentar verificar novamente
-          </button>
-        </div>
-      }
+        @for (classificacao of classificacoes; track $index; let i = $index) {
+        <button [id]="'class-' + i" class="opcao" [disabled]="selecionado === null || enviando || resultado !== null"
+          (click)="escolherClassificacao(i)">
+          {{ classificacao }}
+        </button>
+        }
+      </div>
+    </div>
 
-      @if (resultado) {
-        <div class="feedback">
-          <h3>
-            {{ resultado.correta ? 'Parabéns! Todas estão corretas!' : 'Algumas associações estão incorretas.' }}
-          </h3>
+    @if (enviando) {
+    <div class="feedback">
+      <p>Verificando suas associações...</p>
+    </div>
+    }
 
-          <p>{{ resultado.explicacao }}</p>
+    @if (erro && pergunta) {
+    <div class="feedback">
+      <p>{{ erro }}</p>
+      <button class="botao-principal" (click)="verificarRespostas()">
+        Tentar verificar novamente
+      </button>
+    </div>
+    }
 
-          <button class="botao-principal" (click)="proxima()">
-            Próxima pergunta
-          </button>
-        </div>
-      }
-    </section>
+    @if (resultado) {
+    <div class="feedback">
+      <h3>
+        {{ resultado.correta ? 'Parabéns! Todas estão corretas!' : 'Algumas associações estão incorretas.' }}
+      </h3>
+
+      <p>{{ resultado.explicacao }}</p>
+
+      <button class="botao-principal" (click)="proxima()">
+        Próxima pergunta
+      </button>
+    </div>
+    }
+  </section>
   }
 </main>
