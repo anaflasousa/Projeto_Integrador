@@ -13,28 +13,39 @@
     <section class="pergunta">
       <p>Carregando perguntas...</p>
     </section>
-  } @else if (erro) {
+  } @else if (erro && !pergunta) {
     <section class="pergunta">
       <p class="feedback">{{ erro }}</p>
       <button class="botao-principal" (click)="carregarPergunta()">
         Tentar novamente
       </button>
     </section>
+  } @else if (concluiu) {
+    <section class="pergunta">
+      <h2>Desafio concluído!</h2>
+      <p>Você chegou ao final de todas as perguntas.</p>
+
+      <button class="botao-principal" (click)="reiniciar()">
+        Recomeçar desafio
+      </button>
+    </section>
   } @else if (pergunta) {
     <section class="pergunta">
+      <span>QUESTÃO {{ indiceAtual + 1 }} DE {{ perguntas.length }}</span>
+
       <h2>{{ pergunta.enunciado }}</h2>
 
       <div class="duas-colunas">
         <div>
           <h3>Termos</h3>
 
-          @for (termo of termos; track termo.texto; let i = $index) {
+          @for (termo of termos; track $index; let i = $index) {
             <button
               class="opcao"
-              [disabled]="respostas[i] !== undefined || enviando || concluiu"
+              [disabled]="respostas[i] !== undefined || enviando || resultado !== null"
+              [class.selecionada]="selecionado === i"
               [class.correta]="resultado?.resultados?.[i.toString()] === true"
               [class.errada]="resultado?.resultados?.[i.toString()] === false"
-              [class.selecionada]="selecionado === i"
               (click)="escolherTermo(i)"
             >
               {{ termo.texto }}
@@ -43,8 +54,6 @@
                 ✓
               } @else if (resultado?.resultados?.[i.toString()] === false) {
                 ✗
-              } @else if (respostas[i] !== undefined) {
-                ✓
               }
             </button>
           }
@@ -53,10 +62,10 @@
         <div>
           <h3>Classificações</h3>
 
-          @for (classificacao of classificacoes; track classificacao; let i = $index) {
+          @for (classificacao of classificacoes; track $index; let i = $index) {
             <button
               class="opcao"
-              [disabled]="selecionado === null || enviando || concluiu"
+              [disabled]="selecionado === null || enviando || resultado !== null"
               (click)="escolherClassificacao(i)"
             >
               {{ classificacao }}
@@ -71,7 +80,7 @@
         </div>
       }
 
-      @if (erro) {
+      @if (erro && pergunta) {
         <div class="feedback">
           <p>{{ erro }}</p>
           <button class="botao-principal" (click)="verificarRespostas()">
@@ -80,21 +89,19 @@
         </div>
       }
 
-      @if (feedback && resultado) {
+      @if (resultado) {
         <div class="feedback">
-          <p>{{ feedback }}</p>
+          <h3>
+            {{ resultado.correta ? 'Parabéns! Todas estão corretas!' : 'Algumas associações estão incorretas.' }}
+          </h3>
 
-          @if (concluiu) {
-            <h3>Parabéns! Todas as associações estão corretas!</h3>
-          } @else {
-            <p>Confira as associações marcadas e tente novamente.</p>
-          }
+          <p>{{ resultado.explicacao }}</p>
+
+          <button class="botao-principal" (click)="proxima()">
+            Próxima pergunta
+          </button>
         </div>
       }
-
-      <button class="botao-principal" (click)="reiniciar()">
-        Recomeçar
-      </button>
     </section>
   }
 </main>

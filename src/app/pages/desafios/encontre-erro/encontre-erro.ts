@@ -18,7 +18,10 @@ import {
   styleUrl: './encontre-erro.scss',
 })
 export class EncontreErro implements OnInit {
+  perguntas: Pergunta[] = [];
   pergunta: Pergunta | null = null;
+
+  indiceAtual = 0;
   selecionada: number | null = null;
   resultado: ResultadoResposta | null = null;
 
@@ -28,51 +31,53 @@ export class EncontreErro implements OnInit {
   constructor(
     private quizService: QuizService,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    console.log('Tela Encontre o Erro iniciou');
-    this.carregarPergunta();
+    this.carregarPerguntas();
   }
 
-  carregarPergunta(): void {
+  carregarPerguntas(): void {
     this.carregando = true;
     this.erro = '';
-    console.log('Buscando perguntas do backend...');
 
     this.quizService.buscarPerguntas('encontre-erro').subscribe({
       next: (perguntas: Pergunta[]) => {
-        console.log('Perguntas recebidas:', perguntas);
-
-        this.pergunta = perguntas[0] ?? null;
+        this.perguntas = perguntas;
+        this.indiceAtual = 0;
+        this.atualizarPergunta();
         this.carregando = false;
-
-        if (!this.pergunta) {
-          this.erro = 'Nenhuma pergunta encontrada.';
-        }
 
         this.cdr.detectChanges();
       },
-      error: () => {
+      error: (erro) => {
+        console.error('Erro ao carregar perguntas:', erro);
+        this.erro = 'Não foi possível carregar as perguntas.';
         this.carregando = false;
-        this.erro = 'Não foi possível carregar a pergunta.';
 
         this.cdr.detectChanges();
       }
     });
   }
 
+  atualizarPergunta(): void {
+    this.pergunta = this.perguntas[this.indiceAtual] ?? null;
+    this.selecionada = null;
+    this.resultado = null;
+
+    if (!this.pergunta) {
+      this.erro = 'Não há mais perguntas disponíveis.';
+    }
+  }
+
   responder(indice: number): void {
     if (this.selecionada !== null || !this.pergunta) return;
-
-    console.log('Alternativa clicada:', indice);
 
     this.selecionada = indice;
     this.erro = '';
 
     this.quizService.responder(this.pergunta.id, indice).subscribe({
       next: (resultado: ResultadoResposta) => {
-        console.log('Resultado recebido:', resultado);
         this.resultado = resultado;
         this.cdr.detectChanges();
       },
@@ -85,9 +90,14 @@ export class EncontreErro implements OnInit {
     });
   }
 
+  proxima(): void {
+    this.indiceAtual++;
+    this.atualizarPergunta();
+  }
+
   reiniciar(): void {
-    this.selecionada = null;
-    this.resultado = null;
+    this.indiceAtual = 0;
     this.erro = '';
+    this.atualizarPergunta();
   }
 }

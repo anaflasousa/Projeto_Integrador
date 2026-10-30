@@ -34,10 +34,18 @@ export class Quiz implements OnInit {
   ngOnInit() {
     this.carregarPergunta();
   }
+  
+  reiniciar() {
+  this.indiceAtual = 0;
+  this.selecionada = null;
+  this.resultado = null;
+  this.carregarPergunta();
+}
 
   carregarPergunta() {
   this.carregando = true;
   this.erro = '';
+
 
 
   this.quizService.buscarPerguntas('quiz').subscribe({

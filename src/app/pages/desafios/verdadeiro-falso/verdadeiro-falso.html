@@ -1,4 +1,3 @@
-
 <main class="desafio">
   <a routerLink="/jogos" class="voltar">← Voltar aos desafios</a>
 
@@ -7,19 +6,36 @@
   </div>
 
   <h1>Verdadeiro <span>ou falso?</span></h1>
-  <p>Leia atentamente o enunciado e responda se a afirmação é verdadeira ou falsa.</p>
+
+  <p>
+    Leia atentamente o enunciado e responda se a afirmação é verdadeira ou falsa.
+  </p>
 
   @if (carregando) {
-    <p>Carregando pergunta...</p>
-  }
-
-  @if (erro) {
-    <p class="feedback">{{ erro }}</p>
-  }
-
-  @if (!carregando && pergunta) {
     <section class="pergunta">
-      <span>QUESTÃO 01</span>
+      <p>Carregando perguntas...</p>
+    </section>
+  } @else if (erro && !pergunta) {
+    <section class="pergunta">
+      <p class="feedback">{{ erro }}</p>
+
+      <button class="botao-principal" (click)="carregarPerguntas()">
+        Tentar novamente
+      </button>
+    </section>
+  } @else if (concluiu) {
+    <section class="pergunta">
+      <h2>Desafio concluído!</h2>
+      <p>Você respondeu a todas as perguntas.</p>
+
+      <button class="botao-principal" (click)="reiniciar()">
+        Recomeçar desafio
+      </button>
+    </section>
+  } @else if (pergunta) {
+    <section class="pergunta">
+      <span>QUESTÃO {{ indiceAtual + 1 }} DE {{ perguntas.length }}</span>
+
       <h2>{{ pergunta.enunciado }}</h2>
 
       <div class="opcoes">
@@ -28,7 +44,8 @@
           [class.correta]="resultado && resultado.correta && resposta === true"
           [class.errada]="resultado && !resultado.correta && resposta === true"
           [disabled]="resposta !== null"
-          (click)="responder(true)">
+          (click)="responder(true)"
+        >
           Verdadeiro
         </button>
 
@@ -37,10 +54,17 @@
           [class.correta]="resultado && resultado.correta && resposta === false"
           [class.errada]="resultado && !resultado.correta && resposta === false"
           [disabled]="resposta !== null"
-          (click)="responder(false)">
+          (click)="responder(false)"
+        >
           Falso
         </button>
       </div>
+
+      @if (erro && pergunta) {
+        <div class="feedback">
+          <p>{{ erro }}</p>
+        </div>
+      }
 
       @if (resultado) {
         <div class="feedback">
@@ -50,7 +74,9 @@
 
           <p>{{ resultado.explicacao }}</p>
 
-          <button (click)="reiniciar()">Tentar novamente</button>
+          <button class="botao-principal" (click)="proxima()">
+            Próxima pergunta
+          </button>
         </div>
       }
     </section>
