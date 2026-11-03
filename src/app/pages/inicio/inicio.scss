@@ -6,10 +6,16 @@
   background: #101A18;
 }
 
+.container{
+  background:#17201f;
+  border-radius: 5%;
+  border: solid 1px #213a30;
+  padding: 50px;
+}
+
 /* APRESENTAÇÃO E BOTÃO JOGAR */
 
 .apresentacao {
-  min-height: 78vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
