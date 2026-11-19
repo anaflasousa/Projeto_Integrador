@@ -1,19 +1,28 @@
+body {
+  min-height: 100vh;
+  padding: 0 7%;
+  color: #354C50;
+  background: #F7F3EB;
+}
+
 .desafio {
   max-width: 900px;
   min-height: 100vh;
   margin: auto;
   padding: 40px 24px;
-  color: #E5EDE8;
+  color: #354C50; 
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .voltar {
-  color: #63C795;
+  color: #A25C3B; 
   text-decoration: none;
+  font-weight: 600;
 }
 
 .voltar:hover {
-  color: #07d66f;
+  color: #83472B;
+  text-decoration: underline;
 }
 
 .cabecalho {
@@ -22,46 +31,49 @@
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 40px;
-  color: #63C795;
+  color: #3B6E48;
   font-size: 13px;
+  font-weight: bold;
 }
 
 h1 {
   font-size: clamp(32px, 5vw, 48px);
+  color: #2C3E42;
 }
 
 h1 span {
-  color: #07d66f;
+  color: #C28E38; 
 }
 
 .desafio > p,
 .pergunta > p {
-  color: #b4b4be;
+  color: #4A5D60;
   line-height: 1.7;
 }
 
 .pergunta {
   margin-top: 30px;
   padding: 28px;
-  border: 1px solid #34343b;
+  border: 1px solid #DFD1B8;
   border-radius: 18px;
-  background: #171f1c;
+  background: #E8DCC5; 
 }
 
 .pergunta > span {
-  color: #63C795;
+  color: #3B6E48;
   font-size: 12px;
   font-weight: bold;
 }
 
 .pergunta h2 {
   line-height: 1.5;
+  color: #2C3E42;
 }
 
 .frase {
   padding: 16px;
   border-radius: 10px;
-  background: #222c27;
+  background: #D8C7AB;
 }
 
 .alternativas,
@@ -74,10 +86,10 @@ h1 span {
 .alternativa,
 .opcao {
   padding: 16px;
-  border: 1px solid #3a4840;
+  border: 1px solid #CCC0A5;
   border-radius: 10px;
-  background: #202923;
-  color: #E5EDE8;
+  background: #F7F3EB;
+  color: #2C3E42;
   text-align: left;
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
@@ -85,13 +97,14 @@ h1 span {
 
 .alternativa span {
   margin-right: 12px;
-  color: #63C795;
+  color: #3B6E48;
   font-weight: bold;
 }
 
 .alternativa:hover:not(:disabled),
 .opcao:hover:not(:disabled) {
-  border-color: #63C795;
+  border-color: #3B6E48;
+  background: #FFFFFF;
 }
 
 .alternativa:disabled {
@@ -99,21 +112,24 @@ h1 span {
 }
 
 .alternativa.correta {
-  border-color: #07d66f;
-  background: #123523;
+  border-color: #274C31;
+  background: #D1E7DD;
+  color: #0F5132;
 }
 
 .alternativa.errada {
-  border-color: #ef4444;
-  background: #3a191d;
+  border-color: #A25C3B;
+  background: #F8D7DA;
+  color: #842029;
 }
 
 .feedback {
   margin-top: 22px;
   padding: 18px;
   border-radius: 12px;
-  background: #222c27;
+  background: #F7F3EB;
   line-height: 1.6;
+  border: 1px solid #CCC0A5;
 }
 
 .feedback button,
@@ -121,7 +137,7 @@ h1 span {
   padding: 12px 18px;
   border: 0;
   border-radius: 9px;
-  background: #245C45;
+  background: #A25C3B; 
   color: #ffffff;
   font-weight: bold;
   cursor: pointer;
@@ -130,12 +146,12 @@ h1 span {
 
 .feedback button:hover,
 .botao-principal:hover {
-  background: #0f5739;
+  background: #83472B;
   transform: translateY(-2px);
 }
 
 .feedback p {
-  color: #d0d8d3;
+  color: #4A5D60;
 }
 
 .duas-colunas {
