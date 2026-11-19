@@ -1,78 +1,103 @@
 <body>
-<main class="desafio">
-  <a routerLink="/jogos" class="voltar">← Voltar aos desafios</a>
+  <main class="desafio">
+    <a routerLink="/jogos" class="voltar">← Voltar aos desafios</a>
 
-  <div class="cabecalho">
-    <span>DESAFIO 04</span>
-  </div>
+    <div class="cabecalho">
+      <span>DESAFIO 04</span>
+    </div>
 
-  <h1>Encontre o <span>erro</span></h1>
-  <p>Uma das análises abaixo está incorreta. Identifique-a.</p>
+    <h1>Encontre o <span>erro</span></h1>
+    <p>Uma das análises abaixo está incorreta. Identifique-a.</p>
 
-  @if (carregando) {
+    @if (carregando) {
     <section class="pergunta">
       <p>Carregando perguntas...</p>
     </section>
-  }
+    }
 
-  @else if (erro && !pergunta) {
+    @else if (erro && !pergunta) {
     <section class="pergunta">
       <p class="feedback">{{ erro }}</p>
-      <button (click)="carregarPerguntas()">Tentar carregar novamente</button>
+      <button class="botao-principal" (click)="carregarPerguntas()">Tentar carregar novamente</button>
     </section>
-  }
+    }
 
-  @else if (!pergunta && !carregando) {
-    <section class="pergunta">
-      <h2>Você concluiu o desafio!</h2>
+    @else if (finalizado) {
+    <section class="pergunta resultado-final">
+      <h2>DESAFIO CONCLUÍDO!</h2>
       <p>Parabéns por finalizar todas as questões.</p>
-      <button (click)="reiniciar()">Refazer desafio</button>
-    </section>
-  }
 
-  @else if (pergunta) {
+      <div class="estatisticas">
+        <div class="estatistica">
+          <span>Acertos</span>
+          <h3>{{ acertos }}</h3>
+        </div>
+
+        <div class="estatistica">
+          <span>Erros</span>
+          <h3>{{ erros }}</h3>
+        </div>
+
+        <div class="estatistica">
+          <span>Aproveitamento</span>
+          <h3>{{ porcentagem }}%</h3>
+        </div>
+      </div>
+
+      <div class="grafico">
+        <h3>Seu desempenho</h3>
+
+        <div class="barra-grafico">
+          <div class="barra-acertos" [style.width.%]="porcentagem"></div>
+          <div class="barra-erros" [style.width.%]="100 - porcentagem"></div>
+        </div>
+        <div class="legenda-grafico">
+          <span class="legenda-acertos">{{ acertos }} acertos</span>
+          <span class="legenda-erros">{{ erros }} erros</span>
+        </div>
+      </div>
+
+      <button class="botao-principal Bnt-reiniciar" (click)="reiniciar()">Refazer Desafio</button>
+    </section>
+    }
+
+    @else if (pergunta && !finalizado) {
     <section class="pergunta">
-      <span>QUESTÃO {{ indiceAtual + 1 }}</span>
+      <span>QUESTÃO {{ indiceAtual + 1 }} DE {{ perguntas.length }}</span>
       <h2>{{ pergunta.enunciado }}</h2>
 
       <div class="alternativas">
         @for (opcao of pergunta.opcoes ?? []; track opcao; let i = $index) {
-          <button
-            class="alternativa"
-            [disabled]="selecionada !== null"
-            [class.correta]="resultado && resultado.correta && selecionada === i"
-            [class.errada]="resultado && !resultado.correta && selecionada === i"
-            (click)="responder(i)">
-            {{ opcao }}
-          </button>
+        <button class="alternativa" [disabled]="selecionada !== null"
+          [class.correta]="resultado && resultado.correta && selecionada === i"
+          [class.errada]="resultado && !resultado.correta && selecionada === i" (click)="responder(i)">
+          {{ opcao }}
+        </button>
         }
       </div>
 
       @if (erro && pergunta) {
-        <div class="feedback">
-          <p>{{ erro }}</p>
-        </div>
+      <div class="feedback">
+        <p>{{ erro }}</p>
+      </div>
       }
 
       @if (resultado) {
-        <div class="feedback">
-          <h3>
-            {{ resultado.correta
-              ? 'Você encontrou o erro!'
-              : 'Essa não é a análise incorreta.' }}
-          </h3>
+      <div class="feedback">
+        <h3>
+          {{ resultado.correta
+          ? 'Você encontrou o erro!'
+          : 'Essa não é a análise incorreta.' }}
+        </h3>
 
-          <p>{{ resultado.explicacao }}</p>
+        <p>{{ resultado.explicacao }}</p>
 
-          @if (indiceAtual < perguntas.length - 1) {
-            <button (click)="proxima()">Próxima questão</button>
-          } @else {
-            <h3>Você concluiu o desafio!</h3>
-            <button (click)="reiniciar()">Refazer desafio</button>
-          }
-        </div>
+        <button class="botao-principal" (click)="proxima()">
+          {{ indiceAtual < perguntas.length - 1 ? 'Próxima questão' : 'Ver resultado' }}
+        </button>
+      </div>
       }
     </section>
-  }
-</main>
+    }
+  </main>
 </body>

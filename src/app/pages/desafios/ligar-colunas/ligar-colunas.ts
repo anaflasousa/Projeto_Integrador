@@ -45,6 +45,13 @@ export class LigarColunas implements OnInit {
   enviando = false;
   erro = '';
 
+  acertos = 0;
+  erros = 0;
+
+  finalizado = false;
+  porcentagem = 0;
+  totalAssociacoes = 0;
+
   classificacoes: string[] = [];
 
   constructor(
@@ -157,6 +164,13 @@ export class LigarColunas implements OnInit {
     ).subscribe({
       next: (resultado: ResultadoResposta) => {
         this.resultado = resultado;
+
+        if (resultado.correta) {
+          this.acertos++;
+        } else {
+          this.erros++;
+        }
+
         this.enviando = false;
         this.feedback = resultado.explicacao;
         this.cdr.detectChanges();
@@ -171,12 +185,24 @@ export class LigarColunas implements OnInit {
   }
 
   proxima(): void {
-    this.indiceAtual++;
-    this.atualizarPergunta();
+    if (this.indiceAtual < this.perguntas.length - 1) {
+      this.indiceAtual++;
+      this.atualizarPergunta();
+    } else {
+      this.finalizado = true;
+      const total = this.acertos + this.erros;
+
+      this.porcentagem = total > 0 ? Math.round((this.acertos / total) * 100) : 0;
+    }
   }
 
   reiniciar(): void {
     this.indiceAtual = 0;
+    this.acertos = 0;
+    this.erros = 0;
+    this.finalizado = false;
+    this.porcentagem = 0;
+    
     this.atualizarPergunta();
   }
 

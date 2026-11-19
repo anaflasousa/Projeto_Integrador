@@ -25,13 +25,18 @@ export class EncontreErro implements OnInit {
   selecionada: number | null = null;
   resultado: ResultadoResposta | null = null;
 
+  acertos = 0;
+  erros = 0;
+  finalizado = false;
+  porcentagem = 0;
+
   carregando = true;
   erro = '';
 
   constructor(
     private quizService: QuizService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.carregarPerguntas();
@@ -79,7 +84,17 @@ export class EncontreErro implements OnInit {
     this.quizService.responder(this.pergunta.id, indice).subscribe({
       next: (resultado: ResultadoResposta) => {
         this.resultado = resultado;
+
+        if (resultado.correta) {
+          this.acertos++;
+        } else {
+          this.erros++;
+        }
+
         this.cdr.detectChanges();
+
+        console.log('Acertos:', this.acertos);
+        console.log('Erros:', this.erros);
       },
       error: (erro) => {
         console.error('Erro ao verificar resposta:', erro);
@@ -91,13 +106,25 @@ export class EncontreErro implements OnInit {
   }
 
   proxima(): void {
-    this.indiceAtual++;
-    this.atualizarPergunta();
+    if (this.indiceAtual < this.perguntas.length - 1) {
+      this.indiceAtual++;
+      this.atualizarPergunta();
+    } else {
+      this.finalizado = true;
+    }
+
+    const total = this.acertos + this.erros;
+
+    this.porcentagem = total > 0 ? Math.round((this.acertos / total) * 100) : 0;
   }
 
   reiniciar(): void {
     this.indiceAtual = 0;
+    this.acertos = 0;
+    this.erros = 0;
     this.erro = '';
+    this.finalizado = false;
+    this.porcentagem = 0;
     this.atualizarPergunta();
   }
 }

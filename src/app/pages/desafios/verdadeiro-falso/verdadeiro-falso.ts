@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
@@ -25,6 +24,11 @@ export class VerdadeiroFalso implements OnInit {
   carregando = true;
   erro = '';
 
+  acertos = 0;
+  erros = 0;
+  porcentagem = 0;
+  finalizado = false;
+
   constructor(
     private quizService: QuizService,
     private cdr: ChangeDetectorRef
@@ -42,6 +46,11 @@ export class VerdadeiroFalso implements OnInit {
       next: (perguntas: Pergunta[]) => {
         this.perguntas = perguntas;
         this.indiceAtual = 0;
+
+        this.acertos = 0;
+        this.erros = 0;
+        this.porcentagem = 0;
+        this.finalizado = false;
 
         this.atualizarPergunta();
         this.carregando = false;
@@ -85,12 +94,19 @@ export class VerdadeiroFalso implements OnInit {
     ).subscribe({
       next: (resultado: ResultadoResposta) => {
         this.resultado = resultado;
+
+        if (resultado.correta) {
+          this.acertos++;
+        } else {
+          this.erros++;
+        }
+
         this.cdr.detectChanges();
       },
       error: (erro) => {
         console.error('Erro ao verificar resposta:', erro);
 
-        this.erro = 'Não foi possível verificar sua resposta.';
+        this.erro = 'Não foi possível verificar a resposta.';
         this.resposta = null;
 
         this.cdr.detectChanges();
@@ -99,16 +115,31 @@ export class VerdadeiroFalso implements OnInit {
   }
 
   proxima(): void {
-    this.indiceAtual++;
-    this.atualizarPergunta();
+    if (this.indiceAtual < this.perguntas.length - 1) {
+      this.indiceAtual++;
+      this.atualizarPergunta();
+    } else {
+      this.finalizado = true;
+
+      const total = this.acertos + this.erros;
+
+      this.porcentagem = total > 0
+        ? Math.round((this.acertos / total) * 100)
+        : 0;
+    }
   }
 
   reiniciar(): void {
     this.indiceAtual = 0;
-    this.atualizarPergunta();
-  }
+    this.resposta = null;
+    this.resultado = null;
 
-  get concluiu(): boolean {
-    return this.indiceAtual >= this.perguntas.length;
+    this.acertos = 0;
+    this.erros = 0;
+    this.porcentagem = 0;
+    this.finalizado = false;
+    this.erro = '';
+
+    this.atualizarPergunta();
   }
 }

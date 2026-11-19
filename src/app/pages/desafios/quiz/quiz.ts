@@ -20,11 +20,19 @@ import {
 })
 export class Quiz implements OnInit {
   pergunta: Pergunta | null = null;
+  perguntas: Pergunta[] = [];
   selecionada: number | null = null;
   resultado: ResultadoResposta | null = null;
   indiceAtual = 0;
   carregando = true;
   erro = '';
+
+  acertos = 0;
+  erros = 0;
+
+  porcentagem = 0;
+  finalizado = false;
+  
 
   constructor(
     private quizService: QuizService,
@@ -39,6 +47,10 @@ export class Quiz implements OnInit {
   this.indiceAtual = 0;
   this.selecionada = null;
   this.resultado = null;
+  this.acertos = 0;
+  this.erros = 0;
+  this.porcentagem = 0;
+  this.finalizado = false;
   this.carregarPergunta();
 }
 
@@ -50,7 +62,7 @@ export class Quiz implements OnInit {
 
   this.quizService.buscarPerguntas('quiz').subscribe({
     next: (perguntas: Pergunta[]) => {
-
+      this.perguntas = perguntas;
       this.pergunta = perguntas[this.indiceAtual] ?? null;
 
       this.carregando = false;
@@ -83,6 +95,13 @@ export class Quiz implements OnInit {
     this.quizService.responder(this.pergunta.id, indice).subscribe({
       next: (resultado: ResultadoResposta) => {
         this.resultado = resultado;
+
+        if (resultado.correta) {
+          this.acertos++;
+        } else {
+          this.erros++;
+        }
+
         this.cdr.detectChanges();
       },
       error: (erro) => {
@@ -96,12 +115,20 @@ export class Quiz implements OnInit {
     });
   }
 
-  proxima() {
-  this.indiceAtual++;
+ proxima() {
+  if (this.indiceAtual < this.perguntas.length - 1) {
+    this.indiceAtual++;
+    this.selecionada = null;
+    this.resultado = null;
+    this.carregarPergunta();
+  } else {
+    this.finalizado = true;
 
-  this.selecionada = null;
-  this.resultado = null;
+    const total = this.acertos + this.erros;
 
-  this.carregarPergunta();
+    this.porcentagem = total > 0
+      ? Math.round((this.acertos / total) * 100)
+      : 0;
+  }
 }
 }
